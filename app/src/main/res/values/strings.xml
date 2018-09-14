@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Who\'sTurn</string>
+    <string name="loading">Loading…</string>
+    <string name="title_text">Welcome to Who\'s Turn</string>
+    <string name="google_status_fmt">Google User: %s</string>
+    <string name="title_message_logged_out">Login in with your Gmail Account</string>
+    <string name="title_message_logged_in">Logged in with… </string>
 </resources>
