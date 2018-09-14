@@ -26,8 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private String DOCUMENT_KEY="message";
     private MessageObject messageObject;
 
-    private EditText nameET,textET;
-    private TextView messageTV;
+    private TextView whosTurnTV;
 
     private DocumentReference documentReference;
 
@@ -35,9 +34,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        nameET=(EditText)findViewById(R.id.name_et);
-        textET=(EditText)findViewById(R.id.text_et);
-        messageTV=(TextView)findViewById(R.id.message_tv);
+        //initialize views
+        whosTurnTV=(TextView)findViewById(R.id.whos_tv);
         //firestore document reference
         documentReference= FirebaseFirestore.getInstance().collection(COLLECTION_KEY).document(DOCUMENT_KEY);
         realTimeUpdateListener();
@@ -53,12 +51,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (documentSnapshot != null && documentSnapshot.exists()) {
-                try {
+
+                if (messageObject!=null) {
                     messageObject=documentSnapshot.toObject(MessageObject.class);
-                    messageTV.setText(messageObject.NAME_FIELD+": "+messageObject.TEXT_FIELD);
-                } catch (NullPointerException e1) {
-                    messageObject=new MessageObject("name","message");
+                    whosTurn(messageObject);
+                }else{
+                    messageObject=new MessageObject("Kishan",true,0);
+                    sendMessage();
                 }
+
+
 
             } else {
                 Toast.makeText(MainActivity.this, "Current data is null", Toast.LENGTH_SHORT).show();
@@ -69,12 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void sendMessage(View view){
-        try {
-            messageObject=new MessageObject(nameET.getText().toString(),textET.getText().toString());
-        } catch (NullPointerException e) {
-            Toast.makeText(this, "Fields cant be Empty", Toast.LENGTH_SHORT).show();
-        }
+    private void sendMessage(){
         documentReference.set(messageObject)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -90,8 +87,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void confirm(View view) {
+        messageObject=new MessageObject(2);
+        sendMessage();
     }
 
     public void request(View view) {
+        messageObject=new MessageObject(1);
+        sendMessage();
+    }
+
+    private void whosTurn(MessageObject mMessageObject){
+        if(mMessageObject.WHOS_TURN){
+            mMessageObject=new MessageObject("Saurabh",false);
+            sendMessage();
+            whosTurnTV.setText(mMessageObject.NAME_FIELD);
+        }else{
+            mMessageObject=new MessageObject("Kishan",true);
+            sendMessage();
+            whosTurnTV.setText(mMessageObject.NAME_FIELD);
+        }
+    }
+    private void updateTurn(){
+        if (messageObject.WHOS_TURN){
+            if (messageObject.COUNTER==2){
+                messageObject=new MessageObject(false);
+                sendMessage();
+            }
+        }else{
+            if (messageObject.COUNTER==2){
+                messageObject=new MessageObject(true);
+                sendMessage();
+            }
+        }
+
+
+
     }
 }

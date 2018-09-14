@@ -1,14 +1,31 @@
 package com.example.cas.whosturn;
 
 public class MessageObject {
-    public String NAME_FIELD;
-    public String TEXT_FIELD;
-    public Boolean WHOS_TURN=false;
+    public String NAME_FIELD="Kishan";
+    public Boolean WHOS_TURN=true;
     public int COUNTER=0;
 
-    public MessageObject(String NAME_FIELD, String TEXT_FIELD) {
+    public MessageObject(int COUNTER) {
+        this.COUNTER = COUNTER;
+    }
+
+    public MessageObject(Boolean WHOS_TURN) {
+        this.WHOS_TURN = WHOS_TURN;
+    }
+
+    public MessageObject(String NAME_FIELD, Boolean WHOS_TURN, int COUNTER) {
         this.NAME_FIELD = NAME_FIELD;
-        this.TEXT_FIELD = TEXT_FIELD;
+        this.WHOS_TURN = WHOS_TURN;
+        this.COUNTER = COUNTER;
+    }
+
+    public MessageObject(String NAME_FIELD) {
+        this.NAME_FIELD = NAME_FIELD;
+    }
+
+    public MessageObject(String NAME_FIELD, Boolean WHOS_TURN) {
+        this.NAME_FIELD = NAME_FIELD;
+        this.WHOS_TURN = WHOS_TURN;
     }
 
     public MessageObject() {
