@@ -1,6 +1,10 @@
 package com.example.cas.whosturn;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,12 +37,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private TextView mStatusTextView;
     private TextView mTitleMessageTextView;
 
+    public static final String MyPREFERENCES = "MyPrefs";
+    SharedPreferences mSharedPreferences;
+    private Activity instance;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         // Views
         mStatusTextView = findViewById(R.id.status);
         mTitleMessageTextView=findViewById(R.id.title_message);
@@ -47,6 +54,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.disconnect_button).setOnClickListener(this);
+
+        //initializing mSharedPreferences
+        mSharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        //initializing instance of this activity
+        instance=this;
 
         //initialize FirebaseAuth instance
         // Configure sign-in to request the user's ID, email address, and basic
@@ -59,6 +71,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mGoogleSignInClient= com.google.android.gms.auth.api.signin.GoogleSignIn.getClient(this,googleSignInOptions);
         mAuth=FirebaseAuth.getInstance();
     }//onCreate() END
+
+
+
+
 
     //onStart
     @Override
@@ -105,6 +121,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user=mAuth.getCurrentUser();
                             updateUI(user);
+
+                            //add preference to check if LoginActivity added
+                            //added here as need to be added wen user first login only
+                            getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+                                    .putBoolean("isFirstRun", false).apply();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }else{
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -116,11 +138,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 });
     }//firebase auth with google END
 
+
+
     //signIn() method
     private void signIn(){
         Intent signInIntent=mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent,RC_SIGN_IN);
     }//signIn() END
+
+
+
 
     //signOut() method
     private void signOut(){
@@ -133,9 +160,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         updateUI(null);
+                        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+                                .putBoolean("isFirstRun", true).apply();
+                        //recreate activity
+                        MainActivity.instance.finish();
+                        instance.recreate();
                     }
                 });
     }//signOut() END
+
+
+
 
     //revokeAccess() method
     private void revokeAccess() {
@@ -148,9 +183,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         updateUI(null);
+                        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+                                .putBoolean("isFirstRun", true).apply();
+                        //recreate activity
+                        MainActivity.instance.finish();
+                        instance.recreate();
                     }
                 });
     }//revokeAccess() END
+
+
+
+
 
     private void updateUI(FirebaseUser currentLoggedUser){
         hideProgressDialog();
@@ -167,6 +211,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
+    }//updateUI() END
+
+
+
+
+
+
+    //Shared preferences methods for running login screen only once
+    //setDefault()
+    public static void setDefaults(String key, String value, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    //getDefault()
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
     }
 
 

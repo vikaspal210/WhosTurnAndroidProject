@@ -21,15 +21,23 @@
         android:textSize="36sp"/>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Request"
-        android:onClick="request"
-        android:layout_marginTop="124dp"/>
-    <Button
+        android:id="@+id/confirm_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Confirm"
-        android:onClick="confirm"/>
+        android:visibility="gone"
+        android:layout_marginTop="124dp"/>
+    <Button
+        android:id="@+id/request_Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Request"/>
+    <Button
+        android:id="@+id/enter_login_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter Login Activity"
+        android:onClick="enterLoginActivity"/>
 
 </LinearLayout>
