@@ -202,12 +202,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.confirm_button).setVisibility(View.VISIBLE);
         }
         //for updating turn value
-        if (updateUIMesssageObj.COUNTER==4&&updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
+        if (updateUIMesssageObj.COUNTER==4){
             findViewById(R.id.confirm_button).setVisibility(View.GONE);
             findViewById(R.id.request_Button).setVisibility(View.GONE);
             sendMessage(new MessageObject(KISHAN,true,0));
         }
-        if (updateUIMesssageObj.COUNTER==3&&updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
+        if (updateUIMesssageObj.COUNTER==3){
             findViewById(R.id.confirm_button).setVisibility(View.GONE);
             findViewById(R.id.request_Button).setVisibility(View.GONE);
             sendMessage(new MessageObject(VIKAS,false,0));

@@ -5,14 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center|top"
     tools:context=".MainActivity"
     android:padding="12dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center|top"
+        android:layout_weight="1">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="FireStore"/>
+        android:text="FireStore"
+        android:layout_marginBottom="6dp"/>
     <TextView
         android:id="@+id/whos_tv"
         android:layout_width="wrap_content"
@@ -24,31 +30,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:text="You were asked to confirm"/>
+        android:text="You were asked to confirm"
+        android:textStyle="italic"
+        android:textSize="24sp"
+        android:layout_marginTop="36dp"/>
+        <Button
+            android:id="@+id/confirm_button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm"
+            android:visibility="gone"/>
+        <Button
+            android:id="@+id/request_Button"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Request"/>
+    </LinearLayout>
 
 
-    <Button
-        android:id="@+id/confirm_button"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirm"
-        android:visibility="gone"/>
-    <Button
-        android:id="@+id/request_Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="Request"/>
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:gravity="center|bottom"
+        android:paddingBottom="36dp">
+
+
     <Button
         android:id="@+id/enter_login_button"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enter Login Activity"
-        android:onClick="enterLoginActivity"/>
+        android:onClick="enterLoginActivity"
+        android:layout_marginTop="60dp"/>
     <Button
         android:id="@+id/init_button"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Init Button"/>
+    </LinearLayout>
 
 </LinearLayout>
