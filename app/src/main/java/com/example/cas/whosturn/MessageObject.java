@@ -1,7 +1,7 @@
 package com.example.cas.whosturn;
 
 public class MessageObject {
-    public String NAMEOFTURN="Kishan Kushwaha";
+    public String NAMEOFTURN="";
     public Boolean WHOS_TURN=true;
     public int COUNTER=0;
 

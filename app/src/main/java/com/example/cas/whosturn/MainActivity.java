@@ -35,10 +35,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String COLLECTION_KEY="chat";
     private String DOCUMENT_KEY="message";
-    private static final String KISHAN="Kishan Kushwaha";
-    private static final String VIKAS="Vikas Pal";
+    private static final String KISHAN="Vikas Pal";
+    private static final String VIKAS="vishal yadav";
     private MessageObject messageObject;
-    private TextView whosTurnTV;
+    private TextView whosTurnTV,askToConfirmTV;
 
     //document reference
     private DocumentReference documentReference;
@@ -62,9 +62,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //initialize views
         whosTurnTV=(TextView)findViewById(R.id.whos_tv);
+        askToConfirmTV=(TextView)findViewById(R.id.ask_to_confirm);
         //set click listener to buttons
         findViewById(R.id.confirm_button).setOnClickListener(this);
         findViewById(R.id.request_Button).setOnClickListener(this);
+        findViewById(R.id.init_button).setOnClickListener(this);
 
         //initialize instance of Activity for finishing it
         instance=this;
@@ -105,9 +107,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if (documentSnapshot != null && documentSnapshot.exists()) {
 
-                messageObject=readFirestore();
+                Task<DocumentSnapshot> task=documentReference.get();
+                while (!task.isComplete()) {
+                }
+                documentSnapshot = task.getResult();
+
+                messageObject=documentSnapshot.toObject(MessageObject.class);
                 if (messageObject!=null) {
-                    updateUI(readFirestore());
+                    updateUI(messageObject);
 
                 }else{
                     if (currentUser!=null) {
@@ -147,17 +154,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void request() {
         if(readFirestore().WHOS_TURN){
-            sendMessage(new MessageObject(1));
+            sendMessage(new MessageObject(readFirestore().NAMEOFTURN,readFirestore().WHOS_TURN,1));
         }else{
-            sendMessage(new MessageObject(2));
+            sendMessage(new MessageObject(readFirestore().NAMEOFTURN,readFirestore().WHOS_TURN,2));
         }
     }
 
     public void confirm() {
             if (readFirestore().WHOS_TURN) {
-                sendMessage(new MessageObject(4));
+                sendMessage(new MessageObject(readFirestore().NAMEOFTURN,readFirestore().WHOS_TURN,3));
             } else {
-                sendMessage(new MessageObject(3));
+                sendMessage(new MessageObject(readFirestore().NAMEOFTURN,readFirestore().WHOS_TURN,4));
             }
     }
 
@@ -177,23 +184,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (updateUIMesssageObj.COUNTER==0&&updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
             findViewById(R.id.confirm_button).setVisibility(View.GONE);
             findViewById(R.id.request_Button).setVisibility(View.VISIBLE);
+            askToConfirmTV.setVisibility(View.GONE);
         }
         if (updateUIMesssageObj.COUNTER==0&&!updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
-            findViewById(R.id.confirm_button).setVisibility(View.VISIBLE);
             findViewById(R.id.request_Button).setVisibility(View.GONE);
+            askToConfirmTV.setVisibility(View.GONE);
         }
 
-        if ((updateUIMesssageObj.COUNTER==1&&!updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext())))
-                ||(updateUIMesssageObj.COUNTER==2&&!updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext())))){
+        if (updateUIMesssageObj.COUNTER==1&&!updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
+            //show message and Confirm button
+            askToConfirmTV.setVisibility(View.VISIBLE);
             findViewById(R.id.confirm_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.request_Button).setVisibility(View.GONE);
+        }
+        if (updateUIMesssageObj.COUNTER==2&&!updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
+            //show message and Confirm button
+            askToConfirmTV.setVisibility(View.VISIBLE);
+            findViewById(R.id.confirm_button).setVisibility(View.VISIBLE);
         }
         //for updating turn value
-        if (updateUIMesssageObj.COUNTER==4&&!updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
-            sendMessage(new MessageObject(VIKAS,false,0));
-        }
-        if (updateUIMesssageObj.COUNTER==3&&!updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
+        if (updateUIMesssageObj.COUNTER==4&&updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
+            findViewById(R.id.confirm_button).setVisibility(View.GONE);
+            findViewById(R.id.request_Button).setVisibility(View.GONE);
             sendMessage(new MessageObject(KISHAN,true,0));
+        }
+        if (updateUIMesssageObj.COUNTER==3&&updateUIMesssageObj.NAMEOFTURN.equals(LoginActivity.getDefaults("OWNER",getApplicationContext()))){
+            findViewById(R.id.confirm_button).setVisibility(View.GONE);
+            findViewById(R.id.request_Button).setVisibility(View.GONE);
+            sendMessage(new MessageObject(VIKAS,false,0));
         }
 
         //to update ui TEXT according to data
@@ -244,6 +261,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             request();
         }else if(i==R.id.confirm_button){
             confirm();
+        }else if (i==R.id.init_button){
+            sendMessage(new MessageObject(KISHAN,true,0));
         }
 
     }

@@ -19,14 +19,20 @@
         android:layout_height="wrap_content"
         android:text="Whos Turn"
         android:textSize="36sp"/>
+    <TextView
+        android:id="@+id/ask_to_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="You were asked to confirm"/>
+
 
     <Button
         android:id="@+id/confirm_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Confirm"
-        android:visibility="gone"
-        android:layout_marginTop="124dp"/>
+        android:visibility="gone"/>
     <Button
         android:id="@+id/request_Button"
         android:layout_width="match_parent"
@@ -39,5 +45,10 @@
         android:layout_height="wrap_content"
         android:text="Enter Login Activity"
         android:onClick="enterLoginActivity"/>
+    <Button
+        android:id="@+id/init_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Init Button"/>
 
 </LinearLayout>
