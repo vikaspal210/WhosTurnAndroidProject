@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String COLLECTION_KEY="chat";
     private String DOCUMENT_KEY="message";
-    private static final String KISHAN="Vikas Pal";
-    private static final String VIKAS="vishal yadav";
+    private static final String KISHAN="Kishan Kushwaha";
+    private static final String VIKAS="Vikas Pal";
     private MessageObject messageObject;
     private TextView whosTurnTV,askToConfirmTV;
 
